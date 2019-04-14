@@ -1,0 +1,18 @@
+# generated file, don't try to modify
+# command: dot -Tpng <filename> > tree.png
+digraph Automaton {
+    node [shape = circle];
+    0 [style = "bold"];
+    0 -> 3 [label = "use [1] (terminate) "];
+    0 -> 1 [label = "getLicense [1] () "];
+    0 -> 3 [label = "publish [1] (terminate) "];
+    1 -> 1 [label = "use [1] () "];
+    1 -> 2 [label = "getApproval [1] () "];
+    1 -> 4 [label = "publish [1] () "];
+    2 -> 2 [label = "use [1] () "];
+    2 -> 2 [label = "publish [1] () "];
+    3 -> 3 [label = "publish [1] (terminate) "];
+    4 -> 3 [label = "noRemove [1] (terminate) "];
+    4 -> 4 [label = "use [1] () "];
+    4 -> 1 [label = "remove [1] () "];
+}
