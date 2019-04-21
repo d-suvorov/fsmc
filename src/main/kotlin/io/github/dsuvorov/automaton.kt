@@ -1,29 +1,28 @@
 package io.github.dsuvorov
 
-import com.beust.klaxon.Klaxon
-import java.io.File
 import java.util.regex.Pattern
 
-fun main(args: Array<String>) {
-    if (args.size != 3) {
-        val usage = """
-        |Usage: fsmc <fsm> <definition> <output>
-        | <fsm>        - a file with FSM model in dot language
-        | <definition> - a JSON file containing contract fields and actions definitions
-        | <output>     - output file
-        """.trimMargin()
-        println(usage)
-        System.exit(0)
-    }
 
-    val gvText = File(args[0]).readText()
-    val automaton = parseAutomaton(gvText)
-    val jsonText = File(args[1]).readText()
-    val definition = parseContractDefinition(jsonText)!!
-    generateCode(args[2], automaton, definition)
+class Automaton(val name: String, val size: Int) {
+    class Transition(
+        val src: Int,
+        val dst: Int,
+        val event: String,
+        val action: String
+    )
+
+    private val _transitions: MutableList<Transition> = mutableListOf()
+    val transitions: List<Transition>
+        get() = _transitions
+
+    fun addTransition(transition: Transition) {
+        if (transition.src >= size || transition.dst >= size)
+            throw IllegalArgumentException("transition nodes indices exceed automaton size")
+        _transitions.add(transition)
+    }
 }
 
-fun parseAutomaton(gvText: String): Automaton {
+fun parseAutomaton(gvText: String): Automaton? {
     val nameExpr = "digraph *(\\w+)"
     val namePattern = Pattern.compile(nameExpr)
     val nameMatcher = namePattern.matcher(gvText)
@@ -50,6 +49,7 @@ fun parseAutomaton(gvText: String): Automaton {
         val event = edgeMatcher.group(3)
         if (event.startsWith('_')) {
             System.err.println("Event names must not start with an underscore")
+            return null
         }
         eventsList.add(event)
         val action = edgeMatcher.group(5)
@@ -67,11 +67,4 @@ fun parseAutomaton(gvText: String): Automaton {
         res.addTransition(transition)
     }
     return res
-}
-
-data class Action(val name: String, val code: List<String>)
-data class ContractDefinition(val definitions: List<String>, val actions: List<Action>)
-
-fun parseContractDefinition(jsonDefinition: String): ContractDefinition? {
-    return Klaxon().parse<ContractDefinition>(jsonDefinition)
 }
