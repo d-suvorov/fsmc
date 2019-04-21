@@ -33,7 +33,7 @@ fun generateCode(automaton: Automaton, definition: ContractDefinition): String {
         for (t in transitions) {
             emit(indentLevel + 1, "if (state == ${states[t.src]}) {")
             if (t.action.isNotEmpty())
-                emit(indentLevel + 2, "${t.action}()")
+                emit(indentLevel + 2, "${t.action}();")
             emit(indentLevel + 2, "state = ${states[t.dst]};")
             emit(indentLevel + 1, "}")
         }
