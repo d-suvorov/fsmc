@@ -10,7 +10,7 @@ contract Contract {
   function use() public {
     require(state == States.ST_0 || state == States.ST_1 || state == States.ST_2 || state == States.ST_4)
     if (state == ST_0) {
-      terminate()
+      _terminate_action();
       state = ST_3;
     }
     if (state == ST_1) {
@@ -34,7 +34,7 @@ contract Contract {
   function publish() public {
     require(state == States.ST_0 || state == States.ST_1 || state == States.ST_2 || state == States.ST_3)
     if (state == ST_0) {
-      terminate()
+      _terminate_action();
       state = ST_3;
     }
     if (state == ST_1) {
@@ -44,7 +44,7 @@ contract Contract {
       state = ST_2;
     }
     if (state == ST_3) {
-      terminate()
+      _terminate_action();
       state = ST_3;
     }
   }
@@ -59,7 +59,7 @@ contract Contract {
   function noRemove() public {
     require(state == States.ST_4)
     if (state == ST_4) {
-      terminate()
+      _terminate_action();
       state = ST_3;
     }
   }
@@ -71,7 +71,7 @@ contract Contract {
     }
   }
 
-  function terminate() public {
+  function _terminate_action() public {
     emit Terminate;
   }
 }

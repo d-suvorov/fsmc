@@ -25,6 +25,8 @@ fun generateCode(automaton: Automaton, definition: ContractDefinition): String {
             .map { t -> "state == States.${states[t.src]}" }
             .collect(Collectors.joining(" || "))
 
+    fun actionNameInternal(name: String) = "_${name}_action"
+
     fun emitMethod(indentLevel: Int, event: String, transitions: List<Transition>) {
         emit(0, "")
         emit(indentLevel, "function $event() public {")
@@ -32,8 +34,10 @@ fun generateCode(automaton: Automaton, definition: ContractDefinition): String {
         emit(indentLevel + 1, "require($preconditionExpression)")
         for (t in transitions) {
             emit(indentLevel + 1, "if (state == ${states[t.src]}) {")
-            if (t.action.isNotEmpty())
-                emit(indentLevel + 2, "${t.action}();")
+            if (t.action.isNotEmpty()) {
+                val actionMethod = actionNameInternal(t.action)
+                emit(indentLevel + 2, "$actionMethod();")
+            }
             emit(indentLevel + 2, "state = ${states[t.dst]};")
             emit(indentLevel + 1, "}")
         }
@@ -42,7 +46,8 @@ fun generateCode(automaton: Automaton, definition: ContractDefinition): String {
 
     fun emitAction(indentLevel: Int, action: Action) {
         emit(0, "")
-        emit(indentLevel, "function ${action.name}() public {")
+        val actionMethod = actionNameInternal(action.name)
+        emit(indentLevel, "function $actionMethod() public {")
         for (line in action.code) {
             emit(indentLevel + 1, line)
         }

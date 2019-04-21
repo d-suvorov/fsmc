@@ -42,6 +42,9 @@ fun parseAutomaton(gvText: String): Automaton {
         maxLabel = maxOf(maxLabel, srcLabel, dstLabel)
 
         val event = matcher.group(3)
+        if (event.startsWith('_')) {
+            System.err.println("Event names must not start with an underscore")
+        }
         eventsList.add(event)
         val action = matcher.group(5)
         actionsList.add(action)

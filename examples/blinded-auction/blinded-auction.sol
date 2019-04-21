@@ -28,11 +28,11 @@ contract Contract {
   function cancel() public {
     require(state == States.ST_0 || state == States.ST_2)
     if (state == ST_0) {
-      cancel();
+      _cancel_action();
       state = ST_3;
     }
     if (state == ST_2) {
-      cancel();
+      _cancel_action();
       state = ST_3;
     }
   }
@@ -40,7 +40,7 @@ contract Contract {
   function bid() public {
     require(state == States.ST_0)
     if (state == ST_0) {
-      bid();
+      _bid_action();
       state = ST_0;
     }
   }
@@ -48,7 +48,7 @@ contract Contract {
   function close() public {
     require(state == States.ST_0)
     if (state == ST_0) {
-      close();
+      _close_action();
       state = ST_2;
     }
   }
@@ -56,7 +56,7 @@ contract Contract {
   function withdraw() public {
     require(state == States.ST_1)
     if (state == ST_1) {
-      withdraw();
+      _withdraw_action();
       state = ST_1;
     }
   }
@@ -64,7 +64,7 @@ contract Contract {
   function reveal() public {
     require(state == States.ST_2)
     if (state == ST_2) {
-      reveal();
+      _reveal_action();
       state = ST_2;
     }
   }
@@ -72,7 +72,7 @@ contract Contract {
   function finish() public {
     require(state == States.ST_2)
     if (state == ST_2) {
-      finish();
+      _finish_action();
       state = ST_1;
     }
   }
@@ -80,12 +80,12 @@ contract Contract {
   function unbid() public {
     require(state == States.ST_3)
     if (state == ST_3) {
-      unbid();
+      _unbid_action();
       state = ST_3;
     }
   }
 
-  function bid() public {
+  function _bid_action() public {
     bids[msg.sender].push(Bid({
       blindedBid: blindedBid,
       deposit: msg.value
@@ -93,10 +93,10 @@ contract Contract {
     pendingReturns[msg.sender] += msg.value;
   }
 
-  function close() public {
+  function _close_action() public {
   }
 
-  function reveal() public {
+  function _reveal_action() public {
     for (uint i = 0; i < (bids[msg.sender].length <
         values.length ? bids[msg.sender].length : values.length); i++) {
       var bid = bids[msg.sender][i];
@@ -109,10 +109,10 @@ contract Contract {
     }
   }
 
-  function finish() public {
+  function _finish_action() public {
   }
 
-  function withdraw() public {
+  function _withdraw_action() public {
     uint amount = pendingReturns[msg.sender];
     if (amount > 0) {
       if (msg.sender!= highestBidder)
@@ -123,10 +123,10 @@ contract Contract {
     }
   }
 
-  function cancel() public {
+  function _cancel_action() public {
   }
 
-  function unbid() public {
+  function _unbid_action() public {
     uint amount = pendingReturns[msg.sender];
     if (amount > 0) {
       msg.sender.transfer(amount);
