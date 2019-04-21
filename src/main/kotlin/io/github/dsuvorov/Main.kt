@@ -1,5 +1,6 @@
 package io.github.dsuvorov
 
+import com.beust.klaxon.Klaxon
 import java.io.File
 import java.util.regex.Pattern
 
@@ -7,7 +8,9 @@ fun main(args: Array<String>) {
     val gvFilename = args[0]
     val gvText = File(gvFilename).readText()
     val automaton = parseAutomaton(gvText)
-    println(automaton)
+    val jsonText = File("examples/license.json").readText()
+    val definition = parseContractDefinition(jsonText)!!
+    generateCode("contract.sol", automaton, definition)
 }
 
 fun parseAutomaton(gvText: String): Automaton {
@@ -47,3 +50,9 @@ fun parseAutomaton(gvText: String): Automaton {
     return res
 }
 
+data class Action(val name: String, val code: List<String>)
+data class ContractDefinition(val definitions: List<String>, val actions: List<Action>)
+
+fun parseContractDefinition(jsonDefinition: String): ContractDefinition? {
+    return Klaxon().parse<ContractDefinition>(jsonDefinition)
+}

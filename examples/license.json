@@ -1,0 +1,9 @@
+{
+  "definitions" : [],
+  "actions" : [
+    {
+      "name": "terminate",
+      "code": ["emit Terminate;"]
+    }
+  ]
+}
