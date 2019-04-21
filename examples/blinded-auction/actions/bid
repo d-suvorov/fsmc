@@ -1,0 +1,5 @@
+bids[msg.sender].push(Bid({
+  blindedBid: blindedBid,
+  deposit: msg.value
+}));
+pendingReturns[msg.sender] += msg.value;

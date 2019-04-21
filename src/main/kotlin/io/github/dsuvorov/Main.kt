@@ -5,12 +5,22 @@ import java.io.File
 import java.util.regex.Pattern
 
 fun main(args: Array<String>) {
-    val gvFilename = args[0]
-    val gvText = File(gvFilename).readText()
+    if (args.size != 3) {
+        val usage = """
+        |Usage: fsmc <fsm> <definition> <output>
+        | <fsm>        - a file with FSM model in dot language
+        | <definition> - a JSON file containing contract fields and actions definitions
+        | <output>     - output file
+        """.trimMargin()
+        println(usage)
+        System.exit(0)
+    }
+
+    val gvText = File(args[0]).readText()
     val automaton = parseAutomaton(gvText)
-    val jsonText = File("examples/license.json").readText()
+    val jsonText = File(args[1]).readText()
     val definition = parseContractDefinition(jsonText)!!
-    generateCode("contract.sol", automaton, definition)
+    generateCode(args[2], automaton, definition)
 }
 
 fun parseAutomaton(gvText: String): Automaton {

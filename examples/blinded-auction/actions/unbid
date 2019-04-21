@@ -1,0 +1,5 @@
+uint amount = pendingReturns[msg.sender];
+if (amount > 0) {
+  msg.sender.transfer(amount);
+  pendingReturns[msg.sender] = 0;
+}

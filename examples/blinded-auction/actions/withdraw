@@ -1,0 +1,8 @@
+uint amount = pendingReturns[msg.sender];
+if (amount > 0) {
+  if (msg.sender!= highestBidder)
+    msg.sender.transfer(amount);
+  else
+    msg.sender.transfer(amount - highestBid);
+  pendingReturns[msg.sender] = 0;
+}

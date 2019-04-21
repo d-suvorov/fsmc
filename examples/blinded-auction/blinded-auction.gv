@@ -1,0 +1,14 @@
+# generated file, don't try to modify
+# command: dot -Tpng <filename> > tree.png
+digraph Automaton {
+    node [shape = circle];
+    0 [style = "bold"];
+    0 -> 3 [label = "cancel [1] (cancel)"];
+    0 -> 0 [label = "bid [1] (bid)"];
+    0 -> 2 [label = "close [biddingOver] (close)"];
+    1 -> 1 [label = "withdraw [1] (withdraw)"];
+    2 -> 3 [label = "cancel [1] (cancel)"];
+    2 -> 2 [label = "reveal [1] (reveal)"];
+    2 -> 1 [label = "finish [revealOver] (finish)"];
+    3 -> 3 [label = "unbid [1] (unbid)"];
+}

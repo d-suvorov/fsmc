@@ -1,0 +1,10 @@
+for (uint i = 0; i < (bids[msg.sender].length <
+    values.length ? bids[msg.sender].length : values.length); i++) {
+  var bid = bids[msg.sender][i];
+  var (value, secret) = (values[i], secrets[i]);
+  if (bid.blindedBid == keccak256(value, secret) &&
+      bid.deposit >= value && value > highestBid) {
+    highestBid = value;
+    highestBidder = msg.sender;
+  }
+}

@@ -1,0 +1,84 @@
+{
+  "definitions" : [
+    "struct Bid {",
+    "  bytes32 blindedBid;",
+    "  uint deposit;",
+    "}",
+    "",
+    "mapping(address => Bid[]) private bids;",
+    "mapping(address => uint)  private pendingReturns;",
+    "address private highestBidder;",
+    "uint private highestBid;",
+    "boolean private closed = false;",
+    "",
+    "function biddingOver() private returns (bool) {",
+    "  return now > creationTime + 5 days;",
+    "}",
+    "",
+    "function revealOver() private returns (bool) {",
+    "  return now >= creationTime + 10 days;",
+    "}"
+  ],
+  "actions" : [
+    {
+      "name": "bid",
+      "code": [
+        "bids[msg.sender].push(Bid({",
+        "  blindedBid: blindedBid,",
+        "  deposit: msg.value",
+        "}));",
+        "pendingReturns[msg.sender] += msg.value;"
+      ]
+    },
+    {
+      "name": "close",
+      "code": []
+    },
+    {
+      "name": "reveal",
+      "code": [
+        "for (uint i = 0; i < (bids[msg.sender].length <",
+        "    values.length ? bids[msg.sender].length : values.length); i++) {",
+        "  var bid = bids[msg.sender][i];",
+        "  var (value, secret) = (values[i], secrets[i]);",
+        "  if (bid.blindedBid == keccak256(value, secret) &&",
+        "      bid.deposit >= value && value > highestBid) {",
+        "    highestBid = value;",
+        "    highestBidder = msg.sender;",
+        "  }",
+        "}"
+      ]
+    },
+    {
+      "name": "finish",
+      "code": []
+    },
+    {
+      "name": "withdraw",
+      "code": [
+        "uint amount = pendingReturns[msg.sender];",
+        "if (amount > 0) {",
+        "  if (msg.sender!= highestBidder)",
+        "    msg.sender.transfer(amount);",
+        "  else",
+        "    msg.sender.transfer(amount - highestBid);",
+        "  pendingReturns[msg.sender] = 0;",
+        "}"
+      ]
+    },
+    {
+      "name": "cancel",
+      "code": []
+    },
+    {
+      "name": "unbid",
+      "code": [
+        "uint amount = pendingReturns[msg.sender];",
+        "if (amount > 0) {",
+        "  msg.sender.transfer(amount);",
+        "  pendingReturns[msg.sender] = 0;",
+        "}"
+      ]
+    }
+  ]
+}
