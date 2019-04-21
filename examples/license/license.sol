@@ -1,4 +1,4 @@
-contract Contract {
+contract License {
   uint private creationTime = now;
 
   enum State {

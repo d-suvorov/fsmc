@@ -1,4 +1,4 @@
-contract Contract {
+contract BlindedAuction {
   uint private creationTime = now;
 
   enum State {

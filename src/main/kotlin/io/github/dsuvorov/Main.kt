@@ -24,9 +24,15 @@ fun main(args: Array<String>) {
 }
 
 fun parseAutomaton(gvText: String): Automaton {
-    val expr = "(\\d+) ?-> ?(\\d+) ?\\[label ?= ?\" ?(\\w+) ?\\[(.+)] \\((.*)\\) ?\"];"
-    val strPattern = Pattern.compile(expr)
-    val matcher = strPattern.matcher(gvText)
+    val nameExpr = "digraph *(\\w+)"
+    val namePattern = Pattern.compile(nameExpr)
+    val nameMatcher = namePattern.matcher(gvText)
+    nameMatcher.find()
+    val contractName = nameMatcher.group(1)
+
+    val edgeExpr = "(\\d+) ?-> ?(\\d+) ?\\[label ?= ?\" ?(\\w+) ?\\[(.+)] \\((.*)\\) ?\"];"
+    val edgePattern = Pattern.compile(edgeExpr)
+    val edgeMatcher = edgePattern.matcher(gvText)
 
     var maxLabel = 0
     val srcList = mutableListOf<Int>()
@@ -34,23 +40,23 @@ fun parseAutomaton(gvText: String): Automaton {
     val eventsList = mutableListOf<String>()
     val actionsList = mutableListOf<String>()
 
-    while (matcher.find()) {
-        val srcLabel = matcher.group(1).toInt()
+    while (edgeMatcher.find()) {
+        val srcLabel = edgeMatcher.group(1).toInt()
         srcList.add(srcLabel)
-        val dstLabel = matcher.group(2).toInt()
+        val dstLabel = edgeMatcher.group(2).toInt()
         dstList.add(dstLabel)
         maxLabel = maxOf(maxLabel, srcLabel, dstLabel)
 
-        val event = matcher.group(3)
+        val event = edgeMatcher.group(3)
         if (event.startsWith('_')) {
             System.err.println("Event names must not start with an underscore")
         }
         eventsList.add(event)
-        val action = matcher.group(5)
+        val action = edgeMatcher.group(5)
         actionsList.add(action)
     }
 
-    val res = Automaton(maxLabel + 1)
+    val res = Automaton(contractName, maxLabel + 1)
     for (i in srcList.indices) {
         val transition = Automaton.Transition(
             src = srcList[i],

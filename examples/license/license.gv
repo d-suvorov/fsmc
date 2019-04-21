@@ -1,6 +1,6 @@
 # generated file, don't try to modify
 # command: dot -Tpng <filename> > tree.png
-digraph Automaton {
+digraph License {
     node [shape = circle];
     0 [style = "bold"];
     0 -> 3 [label = "use [1] (terminate) "];

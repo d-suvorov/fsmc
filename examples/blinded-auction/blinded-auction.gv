@@ -1,6 +1,6 @@
 # generated file, don't try to modify
 # command: dot -Tpng <filename> > tree.png
-digraph Automaton {
+digraph BlindedAuction {
     node [shape = circle];
     0 [style = "bold"];
     0 -> 3 [label = "cancel [1] (cancel)"];

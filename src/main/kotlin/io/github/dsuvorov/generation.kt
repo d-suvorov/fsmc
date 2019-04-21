@@ -55,7 +55,7 @@ fun generateCode(automaton: Automaton, definition: ContractDefinition): String {
     }
 
     val indentLevel = 0
-    emit(indentLevel, "contract Contract {")
+    emit(indentLevel, "contract ${automaton.name} {")
     emit(indentLevel + 1, "uint private creationTime = now;")
     emit(0, "")
     emit(indentLevel + 1, "enum State {")

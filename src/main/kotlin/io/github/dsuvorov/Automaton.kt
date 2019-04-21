@@ -1,7 +1,7 @@
 package io.github.dsuvorov
 
 
-class Automaton(val size: Int) {
+class Automaton(val name: String, val size: Int) {
     class Transition(
         val src: Int,
         val dst: Int,
